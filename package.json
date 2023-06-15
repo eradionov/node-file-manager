@@ -1,0 +1,26 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "CLI file manager",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":  "node index.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eradionov/node-file-manager.git"
+  },
+  "keywords": [
+    "node",
+    "cli",
+    "file-manager"
+  ],
+  "author": "Evgeny Radionov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eradionov/node-file-manager/issues"
+  },
+  "homepage": "https://github.com/eradionov/node-file-manager#readme"
+}
