@@ -2,11 +2,13 @@ import {parseArgs} from "./Utils/args_parser.mjs";
 import {CommandFactory} from "./command_factory.mjs";
 import {AbstractCommand} from "./Command/abstract_command.mjs";
 import os from "os";
+import {CurrentDirectory} from "./DTO/current_directory.mjs";
+import {InvalidInput} from "./Exception/invald_input.mjs";
 
 export class Bootstrap {
 
     constructor(currentDir, reader) {
-        this._dir = currentDir;
+        this._dir = new CurrentDirectory(currentDir);
         this._reader = reader;
         this._commandFactory = new CommandFactory();
     }
@@ -18,21 +20,23 @@ export class Bootstrap {
         while (true) {
             try {
                 const [command, ...params] = parseArgs(
-                    await this._reader.question(`You are currently in ${this._dir}` + os.EOL)
+                    await this._reader.question(`You are currently in ${this._dir.directory}` + os.EOL)
                 );
 
                 const commandInstance = this._commandFactory.getCommand(command);
 
-                if(!commandInstance instanceof AbstractCommand) {
-                    throw new Error('Operation failed')
+                if (!commandInstance instanceof AbstractCommand || commandInstance === undefined) {
+                    throw new InvalidInput('Invalid input');
+                }
+console.log();
+               await commandInstance.execute(this._dir, params);
+            } catch (error) {
+                if (error instanceof InvalidInput) {
+                    return console.error(error.message);
                 }
 
-                await commandInstance.execute(params);
-            } catch (error) {
-                console.error(error);
+                console.error('Operation failed');
             }
         }
-
-        this._reader.close();
     }
 }

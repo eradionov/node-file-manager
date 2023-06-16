@@ -15,5 +15,8 @@ export function parseArgByName(argName) {
 }
 
 export function parseArgs(args) {
-    return args.toString().split(' ');
+    return args.toString()
+        .trim()
+        .replace(/\s{2,}/, '')
+        .split(' ');
 }
