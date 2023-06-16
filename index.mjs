@@ -13,12 +13,12 @@ const execute = async () => {
 
     console.log(`Welcome to the File Manager, ${username}!`);
 
+    process.on('exit', () => console.log(`Thank you for using File Manager, ${username}, goodbye!`));
+
     const input = process.stdin;
     const output = process.stdout;
 
     try {
-        process.on('exit', () => console.log(`Thank you for using File Manager, ${username}, goodbye!`));
-
         const bootstrap = Bootstrap.bootstrap(
             os.homedir(),
             readline.createInterface({input: input, output: output})

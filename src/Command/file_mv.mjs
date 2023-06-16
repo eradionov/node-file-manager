@@ -24,15 +24,14 @@ export class FileMv extends AbstractCommand {
             const readStream = createReadStream(fileFromPath);
             const writeStream = createWriteStream(fileTo);
 
-            await readStream.pipe(writeStream);
+            readStream.pipe(writeStream)
+                .once('close', () => {
+                    readStream.destroy();
 
-            readStream.once('close', () => {
-                readStream.destroy();
-
-                (async function() {
-                    await fs.unlink(fileFromPath);
-                })();
-            })
+                    (async function() {
+                        await fs.unlink(fileFromPath);
+                    })();
+                })
 
         } catch (error) {
             throw new OperationFailed();

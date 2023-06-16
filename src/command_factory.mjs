@@ -7,6 +7,10 @@ import {FileRename} from "./Command/file_rename.mjs";
 import {FileCp} from "./Command/file_cp.mjs";
 import {FileMv} from "./Command/file_mv.mjs";
 import {FileDelete} from "./Command/file_delete.mjs";
+import {OperationSystem} from "./Command/operation_system.mjs";
+import {Hash} from "./Command/hash.mjs";
+import {Compress} from "./Command/compress.mjs";
+import {Decompress} from "./Command/decompress.mjs";
 
 export class CommandFactory {
     constructor() {
@@ -19,6 +23,10 @@ export class CommandFactory {
         const cp = new FileCp();
         const mv = new FileMv();
         const rm = new FileDelete();
+        const os = new OperationSystem();
+        const hash = new Hash();
+        const compress = new Compress();
+        const decompress = new Decompress();
 
         this._commands = new Map([
             [list.type(), list],
@@ -30,6 +38,10 @@ export class CommandFactory {
             [cp.type(), cp],
             [mv.type(), mv],
             [rm.type(), rm],
+            [os.type(), os],
+            [hash.type(), hash],
+            [compress.type(), compress],
+            [decompress.type(), decompress],
         ]);
     }
 
