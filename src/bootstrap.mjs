@@ -4,6 +4,7 @@ import {AbstractCommand} from "./Command/abstract_command.mjs";
 import os from "os";
 import {CurrentDirectory} from "./DTO/current_directory.mjs";
 import {InvalidInput} from "./Exception/invald_input.mjs";
+import {OperationFailed} from "./Exception/operation_failed.mjs";
 
 export class Bootstrap {
 
@@ -26,16 +27,18 @@ export class Bootstrap {
                 const commandInstance = this._commandFactory.getCommand(command);
 
                 if (!commandInstance instanceof AbstractCommand || commandInstance === undefined) {
-                    throw new InvalidInput('Invalid input');
-                }
-console.log();
-               await commandInstance.execute(this._dir, params);
-            } catch (error) {
-                if (error instanceof InvalidInput) {
-                    return console.error(error.message);
+                    throw new InvalidInput();
                 }
 
-                console.error('Operation failed');
+               await commandInstance.execute(this._dir, params);
+            } catch (error) {
+                if (!error instanceof InvalidInput && !error instanceof OperationFailed) {
+                    console.error(OperationFailed.message());
+
+                    continue;
+                }
+
+                console.error(error.message);
             }
         }
     }

@@ -1,30 +1,30 @@
 import {AbstractCommand} from "./abstract_command.mjs";
-import path from "path";
 import fs from "fs/promises";
+import path from "path";
 import {InvalidInput} from "../Exception/invald_input.mjs";
-import {dirExists, notBlankString} from "../Validator/validator.mjs";
 import {OperationFailed} from "../Exception/operation_failed.mjs";
+import {fileExists, notBlankString} from "../Validator/validator.mjs";
 
-export class FolderCD extends AbstractCommand {
-    async execute(dir, [toDir]) {
-        if (!notBlankString(toDir)) {
+export class FileDelete extends AbstractCommand {
+    async execute(dir, [file]) {
+        if (!notBlankString(file)) {
             throw new InvalidInput();
         }
 
         try {
-            const currDir = path.resolve(dir.directory, toDir);
+            const filePath = path.resolve(dir.directory, file);
 
-            if (!await dirExists(currDir)) {
+            if (!await fileExists(filePath)) {
                 throw new OperationFailed();
             }
 
-            dir.directory = currDir;
+            await fs.unlink(filePath);
         } catch (error) {
             throw new OperationFailed();
         }
     }
 
     type() {
-        return 'cd';
+        return 'rm';
     }
 }
