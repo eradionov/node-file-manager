@@ -11,8 +11,9 @@ import {OperationSystem} from "./Command/operation_system.mjs";
 import {Hash} from "./Command/hash.mjs";
 import {Compress} from "./Command/compress.mjs";
 import {Decompress} from "./Command/decompress.mjs";
+import {Exit} from "./Command/exit.mjs";
 
-export class CommandFactory {
+export class CommandRegistry {
     constructor() {
         const list = new List();
         const up = new DirectoryUp();
@@ -27,6 +28,7 @@ export class CommandFactory {
         const hash = new Hash();
         const compress = new Compress();
         const decompress = new Decompress();
+        const exit = new Exit();
 
         this._commands = new Map([
             [list.type(), list],
@@ -42,6 +44,7 @@ export class CommandFactory {
             [hash.type(), hash],
             [compress.type(), compress],
             [decompress.type(), decompress],
+            [exit.type(), exit],
         ]);
     }
 

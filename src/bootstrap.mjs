@@ -1,5 +1,5 @@
 import {parseArgs} from "./Utils/args_parser.mjs";
-import {CommandFactory} from "./command_factory.mjs";
+import {CommandRegistry} from "./command_registry.mjs";
 import {AbstractCommand} from "./Command/abstract_command.mjs";
 import os from "os";
 import {CurrentDirectory} from "./DTO/current_directory.mjs";
@@ -11,7 +11,7 @@ export class Bootstrap {
     constructor(currentDir, reader) {
         this._dir = new CurrentDirectory(currentDir);
         this._reader = reader;
-        this._commandFactory = new CommandFactory();
+        this._commandRegistry = new CommandRegistry();
     }
     static bootstrap(currentDir, reader) {
         return new Bootstrap(currentDir, reader);
@@ -24,7 +24,7 @@ export class Bootstrap {
                     await this._reader.question(`You are currently in ${this._dir.directory}` + os.EOL)
                 );
 
-                const commandInstance = this._commandFactory.getCommand(command);
+                const commandInstance = this._commandRegistry.getCommand(command);
 
                 if (!commandInstance instanceof AbstractCommand || commandInstance === undefined) {
                     throw new InvalidInput();

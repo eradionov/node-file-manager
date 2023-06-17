@@ -4,6 +4,7 @@ import {createReadStream} from "fs";
 import {fileExists, notBlankString} from "../Validator/validator.mjs";
 import {OperationFailed} from "../Exception/operation_failed.mjs";
 import {InvalidInput} from "../Exception/invald_input.mjs";
+import path from "path";
 
 export class FileCat extends AbstractCommand {
     async execute(dir, [pathToFile]) {
@@ -12,12 +13,13 @@ export class FileCat extends AbstractCommand {
         }
 
         try {
-            if (!await fileExists(pathToFile)) {
+            const resolvedFile = path.resolve(dir.directory, pathToFile);
+
+            if (!await fileExists(resolvedFile)) {
                 throw new OperationFailed();
             }
 
-            // TODO find out why message is not displayed
-            createReadStream(pathToFile)
+            createReadStream(resolvedFile)
                 .pipe(process.stdout);
         } catch (error) {
             throw new OperationFailed();

@@ -13,7 +13,6 @@ export class FileMv extends AbstractCommand {
         }
 
         try {
-            console.log(fileFrom, fileTo);
             const fileFromPath = path.resolve(dir.directory, fileFrom);
             const fileToPath = path.resolve(dir.directory, fileTo);
 
@@ -22,10 +21,11 @@ export class FileMv extends AbstractCommand {
             }
 
             const readStream = createReadStream(fileFromPath);
-            const writeStream = createWriteStream(fileTo);
+            const writeStream = createWriteStream(fileToPath);
 
-            readStream.pipe(writeStream)
-                .once('close', () => {
+            readStream.pipe(writeStream);
+
+            writeStream.once('close', () => {
                     readStream.destroy();
 
                     (async function() {
