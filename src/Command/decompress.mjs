@@ -20,9 +20,14 @@ export class Decompress extends AbstractCommand {
                 throw new OperationFailed();
             }
 
-            createReadStream(resolvedArchive)
-                .pipe(zlib.createBrotliDecompress())
-                .pipe(createWriteStream(resolvedFile));
+            const readStream = createReadStream(resolvedArchive);
+            const writeStream = createWriteStream(resolvedFile);
+
+            readStream.on('error', error => console.log(OperationFailed.message()));
+            writeStream.on('error', error => console.log(OperationFailed.message()));
+
+            readStream.pipe(zlib.createBrotliDecompress())
+                .pipe(writeStream);
         } catch (error) {
             throw new OperationFailed();
         }

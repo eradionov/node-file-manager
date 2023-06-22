@@ -21,6 +21,8 @@ export class Hash extends AbstractCommand {
             const hash = createHash('sha256');
             const readStream = createReadStream(resolvedFile);
 
+            readStream.on('error', error => console.log(OperationFailed.message()));
+
             readStream.pipe(hash)
                 .setEncoding('hex')
                 .pipe(process.stdout);

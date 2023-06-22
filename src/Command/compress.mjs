@@ -20,14 +20,19 @@ export class Compress extends AbstractCommand {
                 throw new OperationFailed();
             }
 
-            createReadStream(resolvedFile)
-                .pipe(zlib.createBrotliCompress({
+            const readStream = createReadStream(resolvedFile);
+            const writeStream = createWriteStream(resolvedArchive);
+
+            readStream.on('error', error => console.log(OperationFailed.message()));
+            writeStream.on('error', error => console.log(OperationFailed.message()));
+
+            readStream.pipe(zlib.createBrotliCompress({
                     params: {
                         [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
                         [zlib.constants.BROTLI_PARAM_QUALITY]: 4
                     }
                 }))
-                .pipe(createWriteStream(resolvedArchive));
+                .pipe(writeStream);
         } catch (error) {
             throw new OperationFailed();
         }

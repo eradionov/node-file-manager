@@ -1,6 +1,6 @@
 import {AbstractCommand} from "./abstract_command.mjs";
 import fs from "fs/promises";
-import {createReadStream} from "fs";
+import {createReadStream, createWriteStream} from "fs";
 import {fileExists, notBlankString} from "../Validator/validator.mjs";
 import {OperationFailed} from "../Exception/operation_failed.mjs";
 import {InvalidInput} from "../Exception/invald_input.mjs";
@@ -19,8 +19,11 @@ export class FileCat extends AbstractCommand {
                 throw new OperationFailed();
             }
 
-            createReadStream(resolvedFile)
-                .pipe(process.stdout);
+            const readStream = createReadStream(resolvedFile);
+
+            readStream.on('error', error => console.log(OperationFailed.message()));
+
+            readStream.pipe(process.stdout);
         } catch (error) {
             throw new OperationFailed();
         }

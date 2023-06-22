@@ -24,6 +24,9 @@ export class FileCp extends AbstractCommand {
             const readStream = createReadStream(fileFromPath);
             const writeStream = createWriteStream(fileTo);
 
+            readStream.on('error', error => console.log(OperationFailed.message()));
+            writeStream.on('error', error => console.log(OperationFailed.message()));
+
             readStream.pipe(writeStream);
         } catch (error) {
             throw new OperationFailed();

@@ -3,6 +3,7 @@ import os from "os";
 import { parseArgByName} from "./src/Utils/args_parser.mjs";
 import readline from "readline/promises";
 import {Bootstrap} from "./src/bootstrap.mjs";
+import {OperationFailed} from "./src/Exception/operation_failed.mjs";
 
 const execute = async () => {
     let username = parseArgByName('username');
@@ -19,9 +20,12 @@ const execute = async () => {
     const output = process.stdout;
 
     try {
+        const rl = readline.createInterface({input: input, output: output});
+        rl.on('error', error => console.log(OperationFailed.message()));
+
         const bootstrap = Bootstrap.bootstrap(
             os.homedir(),
-            readline.createInterface({input: input, output: output})
+            rl
         );
 
         await bootstrap.process();
